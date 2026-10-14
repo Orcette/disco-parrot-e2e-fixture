@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Team Roster</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main>
+    <h1>Team Roster</h1>
+    <table aria-label="Team members">
+      <thead><tr><th>Name</th><th>Role</th></tr></thead>
+      <tbody id="roster"></tbody>
+    </table>
+    <form id="add-member" aria-label="Add member">
+      <label>Name <input name="name" required></label>
+      <label>Role <input name="role"></label>
+      <button type="submit">Add member</button>
+      <p id="form-error" role="alert"></p>
+    </form>
+  </main>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
