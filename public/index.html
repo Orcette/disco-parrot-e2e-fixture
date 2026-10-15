@@ -8,8 +8,10 @@
 <body>
   <main>
     <h1>Team Roster</h1>
+    <p id="roster-status" role="status">Loading roster…</p>
+    <p id="roster-error" role="alert" hidden></p>
     <table aria-label="Team members">
-      <thead><tr><th>Name</th><th>Role</th></tr></thead>
+      <thead><tr><th>Name</th><th>Role</th><th>Actions</th></tr></thead>
       <tbody id="roster"></tbody>
     </table>
     <form id="add-member" aria-label="Add member">
@@ -18,6 +20,13 @@
       <button type="submit">Add member</button>
       <p id="form-error" role="alert"></p>
     </form>
+    <dialog id="remove-dialog" aria-labelledby="remove-dialog-title" aria-describedby="remove-dialog-description">
+      <h2 id="remove-dialog-title"></h2>
+      <p id="remove-dialog-description"></p>
+      <p id="remove-error" role="alert" hidden></p>
+      <button id="confirm-remove" type="button">Remove</button>
+      <button id="cancel-remove" type="button">Cancel</button>
+    </dialog>
   </main>
   <script type="module" src="/app.js"></script>
 </body>

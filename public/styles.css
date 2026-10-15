@@ -1,5 +1,16 @@
-body { font-family: system-ui, sans-serif; margin: 2rem; }
-table { border-collapse: collapse; margin-bottom: 1.5rem; }
-th, td { border-bottom: 1px solid #ddd; padding: 0.4rem 0.8rem; text-align: left; }
-form { display: flex; gap: 0.75rem; align-items: end; flex-wrap: wrap; }
-#form-error { color: #b00020; width: 100%; margin: 0; }
+:root {
+  --font-body: system-ui, sans-serif;
+  --space-page: 2rem;
+  --space-section: 1.5rem;
+  --space-control-gap: 0.75rem;
+  --space-cell-block: 0.4rem;
+  --space-cell-inline: 0.8rem;
+  --color-border-subtle: #ddd;
+  --color-error: #b00020;
+}
+
+body { font-family: var(--font-body); margin: var(--space-page); }
+table { border-collapse: collapse; margin-bottom: var(--space-section); }
+th, td { border-bottom: 1px solid var(--color-border-subtle); padding: var(--space-cell-block) var(--space-cell-inline); text-align: left; }
+form { display: flex; gap: var(--space-control-gap); align-items: end; flex-wrap: wrap; }
+#form-error { color: var(--color-error); width: 100%; margin: 0; }
