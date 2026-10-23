@@ -30,6 +30,13 @@ export function createApp(store) {
         if (typeof name !== "string" || !name.trim()) return json(response, 400, { error: "name_required" });
         return json(response, 201, { member: store.add({ name: name.trim(), role: typeof role === "string" ? role.trim() : "" }) });
       }
+      const memberMatch = url.pathname.match(/^\/api\/members\/([^/]+)$/);
+      if (memberMatch && request.method === "DELETE") {
+        let id;
+        try { id = decodeURIComponent(memberMatch[1]); } catch { return json(response, 404, { error: "not_found" }); }
+        if (!store.remove(id)) return json(response, 404, { error: "not_found" });
+        return json(response, 200, { ok: true });
+      }
       if (request.method !== "GET") return json(response, 404, { error: "not_found" });
       const file = url.pathname === "/" ? "index.html" : url.pathname.slice(1);
       if (file.includes("..")) return json(response, 404, { error: "not_found" });
