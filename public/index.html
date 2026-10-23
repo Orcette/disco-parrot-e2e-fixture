@@ -8,10 +8,19 @@
 <body>
   <main>
     <h1>Team Roster</h1>
+    <p id="roster-status" role="status">Loading team members…</p>
     <table aria-label="Team members">
-      <thead><tr><th>Name</th><th>Role</th></tr></thead>
+      <thead><tr><th>Name</th><th>Role</th><th>Actions</th></tr></thead>
       <tbody id="roster"></tbody>
     </table>
+    <dialog id="remove-dialog" aria-labelledby="remove-dialog-title">
+      <form method="dialog">
+        <p id="remove-dialog-title"></p>
+        <button value="cancel">Cancel</button>
+        <button value="confirm">Confirm removal</button>
+      </form>
+    </dialog>
+    <p id="remove-error" role="alert"></p>
     <form id="add-member" aria-label="Add member">
       <label>Name <input name="name" required></label>
       <label>Role <input name="role"></label>

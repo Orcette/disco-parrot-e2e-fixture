@@ -20,4 +20,10 @@ export class RosterStore {
     this.#members.set(member.id, member);
     return member;
   }
+
+  remove(id) {
+    const member = this.#members.get(String(id));
+    if (!member) return false;
+    return this.#members.delete(member.id);
+  }
 }

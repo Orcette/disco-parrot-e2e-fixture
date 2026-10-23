@@ -1,6 +1,11 @@
 const roster = document.querySelector("#roster");
+const rosterStatus = document.querySelector("#roster-status");
 const form = document.querySelector("#add-member");
 const formError = document.querySelector("#form-error");
+const removeDialog = document.querySelector("#remove-dialog");
+const removeDialogTitle = document.querySelector("#remove-dialog-title");
+const removeError = document.querySelector("#remove-error");
+let memberToRemove;
 
 function renderRow(member) {
   const row = document.createElement("tr");
@@ -10,13 +15,47 @@ function renderRow(member) {
     cell.textContent = value;
     row.append(cell);
   }
+  const actionCell = document.createElement("td");
+  const removeButton = document.createElement("button");
+  removeButton.type = "button";
+  removeButton.textContent = "Remove";
+  removeButton.addEventListener("click", () => {
+    removeError.textContent = "";
+    memberToRemove = member;
+    removeDialogTitle.textContent = `Remove ${member.name}?`;
+    removeDialog.showModal();
+  });
+  actionCell.append(removeButton);
+  row.append(actionCell);
   return row;
 }
 
+removeDialog.addEventListener("close", async () => {
+  const member = memberToRemove;
+  memberToRemove = undefined;
+  if (removeDialog.returnValue !== "confirm" || !member) return;
+  try {
+    const response = await fetch(`/api/members/${encodeURIComponent(member.id)}`, { method: "DELETE" });
+    if (!response.ok) throw new Error("Removal failed");
+    roster.querySelector(`[data-member-id="${CSS.escape(member.id)}"]`)?.remove();
+    if (!roster.children.length) rosterStatus.textContent = "No team members yet.";
+  } catch {
+    removeError.textContent = `Could not remove ${member.name}. Please try again.`;
+  }
+});
+
 async function load() {
-  const response = await fetch("/api/members");
-  const { members } = await response.json();
-  roster.replaceChildren(...members.map(renderRow));
+  try {
+    const response = await fetch("/api/members");
+    if (!response.ok) throw new Error("Roster load failed");
+    const { members } = await response.json();
+    roster.replaceChildren(...members.map(renderRow));
+    rosterStatus.textContent = members.length ? "" : "No team members yet.";
+  } catch {
+    roster.replaceChildren();
+    rosterStatus.setAttribute("role", "alert");
+    rosterStatus.textContent = "Could not load team members. Please try again.";
+  }
 }
 
 form.addEventListener("submit", async (event) => {
@@ -34,6 +73,7 @@ form.addEventListener("submit", async (event) => {
   }
   const { member } = await response.json();
   roster.append(renderRow(member));
+  rosterStatus.textContent = "";
   form.reset();
 });
 
