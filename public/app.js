@@ -1,6 +1,12 @@
 const roster = document.querySelector("#roster");
+const rosterStatus = document.querySelector("#roster-status");
+const rosterError = document.querySelector("#roster-error");
 const form = document.querySelector("#add-member");
 const formError = document.querySelector("#form-error");
+const removeDialog = document.querySelector("#remove-dialog");
+const removeDialogTitle = document.querySelector("#remove-dialog-title");
+const removeError = document.querySelector("#remove-error");
+let memberToRemove;
 
 function renderRow(member) {
   const row = document.createElement("tr");
@@ -10,13 +16,36 @@ function renderRow(member) {
     cell.textContent = value;
     row.append(cell);
   }
+  const actions = document.createElement("td");
+  const removeButton = document.createElement("button");
+  removeButton.type = "button";
+  removeButton.textContent = "Remove";
+  removeButton.addEventListener("click", () => {
+    memberToRemove = { ...member, row };
+    removeDialogTitle.textContent = `Remove ${member.name}?`;
+    removeError.textContent = "";
+    removeDialog.showModal();
+  });
+  actions.append(removeButton);
+  row.append(actions);
   return row;
 }
 
 async function load() {
-  const response = await fetch("/api/members");
-  const { members } = await response.json();
-  roster.replaceChildren(...members.map(renderRow));
+  rosterStatus.textContent = "Loading team members…";
+  rosterError.hidden = true;
+  try {
+    const response = await fetch("/api/members");
+    if (!response.ok) throw new Error("Roster request failed");
+    const { members } = await response.json();
+    roster.replaceChildren(...members.map(renderRow));
+    rosterStatus.textContent = members.length ? "" : "No team members yet.";
+  } catch {
+    roster.replaceChildren();
+    rosterStatus.textContent = "";
+    rosterError.textContent = "Team members could not be loaded. Please try again.";
+    rosterError.hidden = false;
+  }
 }
 
 form.addEventListener("submit", async (event) => {
@@ -38,3 +67,16 @@ form.addEventListener("submit", async (event) => {
 });
 
 await load();
+
+removeDialog.addEventListener("close", async () => {
+  if (removeDialog.returnValue !== "confirm" || !memberToRemove) return;
+  const target = memberToRemove;
+  const response = await fetch(`/api/members/${encodeURIComponent(target.id)}`, { method: "DELETE" });
+  if (!response.ok) {
+    removeError.textContent = "The member could not be removed. Please try again.";
+    removeDialog.showModal();
+    return;
+  }
+  target.row.remove();
+  memberToRemove = null;
+});
