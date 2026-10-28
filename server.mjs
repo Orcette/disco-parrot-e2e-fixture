@@ -25,6 +25,13 @@ export function createApp(store) {
     try {
       if (url.pathname === "/health") { response.end("ok"); return; }
       if (url.pathname === "/api/members" && request.method === "GET") return json(response, 200, { members: store.list() });
+      const memberPath = url.pathname.match(/^\/api\/members\/([^/]+)$/);
+      if (memberPath && request.method === "DELETE") {
+        if (!store.remove(decodeURIComponent(memberPath[1]))) return json(response, 404, { error: "not_found" });
+        response.writeHead(204);
+        response.end();
+        return;
+      }
       if (url.pathname === "/api/members" && request.method === "POST") {
         const { name, role } = await readBody(request);
         if (typeof name !== "string" || !name.trim()) return json(response, 400, { error: "name_required" });
