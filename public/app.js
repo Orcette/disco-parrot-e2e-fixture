@@ -1,6 +1,10 @@
 const roster = document.querySelector("#roster");
 const form = document.querySelector("#add-member");
 const formError = document.querySelector("#form-error");
+const removeDialog = document.querySelector("#remove-member-dialog");
+const removeMessage = document.querySelector("#remove-member-message");
+const removeError = document.querySelector("#remove-error");
+let pendingMember;
 
 function renderRow(member) {
   const row = document.createElement("tr");
@@ -10,8 +14,33 @@ function renderRow(member) {
     cell.textContent = value;
     row.append(cell);
   }
+  const actions = document.createElement("td");
+  const removeButton = document.createElement("button");
+  removeButton.type = "button";
+  removeButton.textContent = "Remove";
+  removeButton.setAttribute("aria-label", `Remove ${member.name}`);
+  removeButton.addEventListener("click", () => {
+    pendingMember = member;
+    removeMessage.textContent = `Are you sure you want to remove ${member.name}?`;
+    removeError.textContent = "";
+    removeDialog.showModal();
+  });
+  actions.append(removeButton);
+  row.append(actions);
   return row;
 }
+
+removeDialog.addEventListener("close", async () => {
+  if (removeDialog.returnValue !== "remove" || !pendingMember) return;
+  const member = pendingMember;
+  pendingMember = undefined;
+  const response = await fetch(`/api/members/${encodeURIComponent(member.id)}`, { method: "DELETE" });
+  if (!response.ok) {
+    removeError.textContent = "Could not remove this member. Please try again.";
+    return;
+  }
+  roster.querySelector(`[data-member-id="${CSS.escape(member.id)}"]`)?.remove();
+});
 
 async function load() {
   const response = await fetch("/api/members");
