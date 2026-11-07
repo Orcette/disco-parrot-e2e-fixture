@@ -23,13 +23,21 @@ form.addEventListener("submit", async (event) => {
   event.preventDefault();
   formError.textContent = "";
   const data = Object.fromEntries(new FormData(form));
-  const response = await fetch("/api/members", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  if (!response.ok) {
-    formError.textContent = "Enter a name to add a member.";
+  let response;
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      response = await fetch("/api/members", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (response.ok) break;
+    } catch {
+      response = undefined;
+    }
+  }
+  if (!response?.ok) {
+    formError.textContent = "Could not save the member. Please try again.";
     return;
   }
   const { member } = await response.json();
