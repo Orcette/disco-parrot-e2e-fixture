@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "node server.mjs",
-    "test:browser": "playwright test"
+    "test:browser": "playwright test",
+    "check": "node --check server.mjs"
   },
   "engines": { "node": ">=22" },
   "devDependencies": {
