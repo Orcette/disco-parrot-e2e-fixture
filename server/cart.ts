@@ -1,1 +1,1 @@
-export const CHECKOUT_RETRIES = 5;
+export const CHECKOUT_RETRIES = 1;
