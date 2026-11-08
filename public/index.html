@@ -9,7 +9,7 @@
   <main>
     <h1>Team Roster</h1>
     <table aria-label="Team members">
-      <thead><tr><th>Name</th><th>Role</th></tr></thead>
+      <thead><tr><th>Name</th><th>Role</th><th>Actions</th></tr></thead>
       <tbody id="roster"></tbody>
     </table>
     <form id="add-member" aria-label="Add member">
@@ -18,6 +18,13 @@
       <button type="submit">Add member</button>
       <p id="form-error" role="alert"></p>
     </form>
+    <dialog id="remove-dialog" aria-labelledby="remove-title">
+      <h2 id="remove-title">Remove member</h2>
+      <p id="remove-message"></p>
+      <p id="remove-error" role="alert"></p>
+      <button id="confirm-remove" type="button">Confirm</button>
+      <button id="cancel-remove" type="button">Cancel</button>
+    </dialog>
   </main>
   <script type="module" src="/app.js"></script>
 </body>
