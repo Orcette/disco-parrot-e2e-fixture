@@ -2,6 +2,18 @@ const roster = document.querySelector("#roster");
 const form = document.querySelector("#add-member");
 const formError = document.querySelector("#form-error");
 
+function renderEmptyState() {
+  const row = document.createElement("tr");
+  const cell = document.createElement("td");
+  const message = document.createElement("p");
+  row.dataset.emptyState = "true";
+  cell.colSpan = 2;
+  message.textContent = "No members yet";
+  cell.append(message);
+  row.append(cell);
+  return row;
+}
+
 function renderRow(member) {
   const row = document.createElement("tr");
   row.dataset.memberId = member.id;
@@ -16,7 +28,7 @@ function renderRow(member) {
 async function load() {
   const response = await fetch("/api/members");
   const { members } = await response.json();
-  roster.replaceChildren(...members.map(renderRow));
+  roster.replaceChildren(...(members.length ? members.map(renderRow) : [renderEmptyState()]));
 }
 
 form.addEventListener("submit", async (event) => {
@@ -33,6 +45,7 @@ form.addEventListener("submit", async (event) => {
     return;
   }
   const { member } = await response.json();
+  roster.querySelector("[data-empty-state]")?.remove();
   roster.append(renderRow(member));
   form.reset();
 });
