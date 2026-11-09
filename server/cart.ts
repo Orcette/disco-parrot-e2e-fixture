@@ -1,1 +1,1 @@
-export const CART_LIMIT = 5;
+export const CART_LIMIT = 10;
