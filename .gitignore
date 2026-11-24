@@ -1,3 +1,7 @@
 node_modules/
 archives/
 .disco-parrot/
+
+# RTB-1 journey: the check recipe's report, and the sentinel's marker
+rtb1-junit.xml
+.rtb1-sentinel-ran
