@@ -1,3 +1,6 @@
 node_modules/
 archives/
 .disco-parrot/
+
+# RTB-1 journey: the check recipe's report
+rtb1-junit.xml
