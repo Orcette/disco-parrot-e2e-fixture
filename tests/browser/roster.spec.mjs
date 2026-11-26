@@ -1,5 +1,10 @@
 import { expect, test } from "./fixtures.mjs";
 
+test("the roster page has the Team Roster title", async ({ page }) => {
+  await page.goto("/");
+  await expect(page).toHaveTitle("Team Roster");
+});
+
 test("the roster lists the seeded members", async ({ page }) => {
   await page.goto("/");
   const rows = page.getByRole("table", { name: "Team members" }).locator("tbody tr");
