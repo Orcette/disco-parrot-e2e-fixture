@@ -1,0 +1,11 @@
+{
+  "name": "rule-a-journey",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup": "npm install --no-save @playwright/test",
+    "setup:recorded": "npm install --no-save @playwright/test && node run-playwright.cjs install ffmpeg",
+    "check": "node run-playwright.cjs --config playwright.off.config.mjs",
+    "check:recorded": "node run-playwright.cjs --config playwright.on.config.mjs"
+  }
+}

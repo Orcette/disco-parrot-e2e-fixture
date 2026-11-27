@@ -1,3 +1,8 @@
 node_modules/
 archives/
 .disco-parrot/
+
+# ini-f38382e1 F2 journey: the Rule A runner's install, results and report
+rule-a/node_modules/
+rule-a/test-results/
+rule-a/rule-a-report.json
